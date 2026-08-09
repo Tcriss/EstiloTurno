@@ -1,5 +1,8 @@
-import { ChatState, SessionMetadata } from "./types";
-import { ScheduleService } from "../schedule/schedule.service";
+import { CreateAppointmentUseCase } from "../../../schedule/application/use-cases/create-appointment.use-case";
+import { GetAvailableSlotsUseCase } from "../../../schedule/application/use-cases/get-available-slots.use-case";
+import { GetServicesUseCase } from "../../../schedule/application/use-cases/get-services.use-case";
+import { ChatState, SessionMetadata } from "../../domain/entities/chat-session.entity";
+import { todayDateString, tomorrowDateString } from "./date-utils";
 
 export interface HandlerResult {
   nextState: ChatState;
@@ -7,17 +10,21 @@ export interface HandlerResult {
   updatedMetadata: SessionMetadata;
 }
 
+export interface ScheduleUseCases {
+  getServices: GetServicesUseCase;
+  getAvailableSlots: GetAvailableSlotsUseCase;
+  createAppointment: CreateAppointmentUseCase;
+}
+
 export function parseDateInput(input: string): string | null {
   const normalized = input.toLowerCase().trim();
-  // El tiempo actual local del sistema es 2026-06-21
-  const today = new Date(2026, 5, 21); // Mes 5 es Junio
+  const todayStr = todayDateString();
 
   if (normalized === "hoy") {
-    return formatDateString(today);
+    return todayStr;
   }
   if (normalized === "mañana" || normalized === "manana") {
-    const tomorrow = new Date(2026, 5, 22);
-    return formatDateString(tomorrow);
+    return tomorrowDateString();
   }
 
   const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -28,7 +35,6 @@ export function parseDateInput(input: string): string | null {
     const d = parseInt(parts[2], 10);
     const testDate = new Date(y, m, d);
     if (testDate.getFullYear() === y && testDate.getMonth() === m && testDate.getDate() === d) {
-      const todayStr = formatDateString(today);
       if (normalized >= todayStr) {
         return normalized;
       }
@@ -37,27 +43,21 @@ export function parseDateInput(input: string): string | null {
   return null;
 }
 
-function formatDateString(date: Date): string {
-  const y = date.getFullYear();
-  const m = (date.getMonth() + 1).toString().padStart(2, "0");
-  const d = date.getDate().toString().padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
 export async function handleChatState(
+  businessId: number,
   state: ChatState,
   messageBody: string,
   metadata: SessionMetadata,
   clientName: string,
   phoneNumber: string,
-  scheduleService: ScheduleService
+  scheduleUseCases: ScheduleUseCases
 ): Promise<HandlerResult> {
   const text = messageBody.trim();
 
   switch (state) {
     case ChatState.START: {
-      const services = await scheduleService.getServices();
-      let responseMessage = `¡Hola ${clientName}! Te damos la bienvenida a *EstiloTurno* 💇‍♀️✨\n\nPor favor, selecciona el servicio que deseas agendar ingresando el número correspondiente:\n\n`;
+      const services = await scheduleUseCases.getServices.execute(businessId);
+      let responseMessage = `¡Hola ${clientName}! Te damos la bienvenida 💇‍♀️✨\n\nPor favor, selecciona el servicio que deseas agendar ingresando el número correspondiente:\n\n`;
 
       services.forEach((service, index) => {
         responseMessage += `*${index + 1}.* ${service.name} — RD$ ${parseFloat(service.price).toLocaleString("es-DO")} (${service.durationMinutes} min)\n`;
@@ -71,7 +71,7 @@ export async function handleChatState(
     }
 
     case ChatState.SELECTING_SERVICE: {
-      const services = await scheduleService.getServices();
+      const services = await scheduleUseCases.getServices.execute(businessId);
       const optionIndex = parseInt(text, 10) - 1;
 
       if (isNaN(optionIndex) || optionIndex < 0 || optionIndex >= services.length) {
@@ -94,7 +94,7 @@ export async function handleChatState(
         price: selectedService.price,
       };
 
-      const responseMessage = `Has seleccionado: *${selectedService.name}* (RD$ ${parseFloat(selectedService.price).toLocaleString("es-DO")}).\n\nPor favor, indica la fecha para tu cita en formato *AAAA-MM-DD* (ejemplo: 2026-06-25), o escribe *Hoy* o *Mañana*.`;
+      const responseMessage = `Has seleccionado: *${selectedService.name}* (RD$ ${parseFloat(selectedService.price).toLocaleString("es-DO")}).\n\nPor favor, indica la fecha para tu cita en formato *AAAA-MM-DD*, o escribe *Hoy* o *Mañana*.`;
 
       return {
         nextState: ChatState.SELECTING_DATE,
@@ -108,7 +108,7 @@ export async function handleChatState(
       if (!parsedDate) {
         return {
           nextState: ChatState.SELECTING_DATE,
-          responseMessage: "⚠️ Fecha no válida o en el pasado. Por favor ingresa una fecha futura en formato *AAAA-MM-DD* (ejemplo: 2026-06-25), o escribe *Hoy* o *Mañana*.",
+          responseMessage: "⚠️ Fecha no válida o en el pasado. Por favor ingresa una fecha futura en formato *AAAA-MM-DD*, o escribe *Hoy* o *Mañana*.",
           updatedMetadata: metadata,
         };
       }
@@ -121,7 +121,7 @@ export async function handleChatState(
         };
       }
 
-      const slots = await scheduleService.getAvailableSlots(parsedDate, metadata.serviceId);
+      const slots = await scheduleUseCases.getAvailableSlots.execute(businessId, parsedDate, metadata.serviceId);
 
       if (slots.length === 0) {
         return {
@@ -139,12 +139,10 @@ export async function handleChatState(
       const updatedMetadata: SessionMetadata = {
         ...metadata,
         date: parsedDate,
-        // Guardamos los slots en la metadata de sesión temporal para poder mapear la respuesta del usuario en el próximo paso
         clientName: metadata.clientName || clientName,
+        // Guardamos los slots ofrecidos para mapear la respuesta numérica del próximo paso
+        tempSlots: slots,
       };
-
-      // Guardamos de forma especial el mapeo de slots en la metadata
-      (updatedMetadata as any).tempSlots = slots;
 
       return {
         nextState: ChatState.SELECTING_TIME,
@@ -154,7 +152,7 @@ export async function handleChatState(
     }
 
     case ChatState.SELECTING_TIME: {
-      const tempSlots: string[] = (metadata as any).tempSlots || [];
+      const tempSlots = metadata.tempSlots || [];
       const optionIndex = parseInt(text, 10) - 1;
 
       if (isNaN(optionIndex) || optionIndex < 0 || optionIndex >= tempSlots.length) {
@@ -174,8 +172,7 @@ export async function handleChatState(
         ...metadata,
         time: selectedTime,
       };
-      // Limpiamos los slots temporales para mantener la metadata limpia
-      delete (updatedMetadata as any).tempSlots;
+      delete updatedMetadata.tempSlots;
 
       const formattedPrice = parseFloat(metadata.price || "0").toLocaleString("es-DO");
       const responseMessage = `¡Excelente! Aquí tienes el resumen de tu cita:\n\n💇‍♀️ *Servicio:* ${metadata.serviceName}\n💰 *Costo:* RD$ ${formattedPrice}\n📅 *Fecha:* ${metadata.date}\n⏰ *Hora:* ${selectedTime}\n\nPor favor, confirma tu cita respondiendo:\n*1.* Para Confirmar\n*2.* Para Cancelar y Empezar de nuevo`;
@@ -198,20 +195,21 @@ export async function handleChatState(
         }
 
         const nameToUse = metadata.clientName || clientName;
-        await scheduleService.createAppointment(
+        await scheduleUseCases.createAppointment.execute({
+          businessId,
           phoneNumber,
-          nameToUse,
-          metadata.serviceId,
-          metadata.date,
-          metadata.time
-        );
+          clientName: nameToUse,
+          serviceId: metadata.serviceId,
+          date: metadata.date,
+          time: metadata.time,
+        });
 
-        const responseMessage = `¡Cita agendada con éxito! 🎉\n\nTe esperamos el *${metadata.date}* a las *${metadata.time}*.\n¡Gracias por elegir EstiloTurno!`;
+        const responseMessage = `¡Cita agendada con éxito! 🎉\n\nTe esperamos el *${metadata.date}* a las *${metadata.time}*.\n¡Gracias por preferirnos!`;
 
         return {
           nextState: ChatState.START,
           responseMessage,
-          updatedMetadata: {}, // Limpiamos la sesión al confirmar
+          updatedMetadata: {},
         };
       } else if (text === "2") {
         return {

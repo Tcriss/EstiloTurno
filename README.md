@@ -1,6 +1,6 @@
 # EstiloTurno
 
-EstiloTurno es una plataforma para gestión y automatización de citas para salones de belleza, peluquerías y barberías.
+EstiloTurno es un bot de WhatsApp con lenguaje natural para agendar citas, más un backoffice web, pensado para profesionales con agenda (barberos, saloneras, consultorios). Cada profesional/negocio es un tenant independiente con su propia agenda, servicios y número de WhatsApp.
 
 El proyecto está organizado como monorepo:
 
@@ -8,7 +8,12 @@ El proyecto está organizado como monorepo:
 EstiloTurno/
   front-end/   Aplicación web con Next.js, Tailwind CSS y Supabase Auth
   backend/     API con NestJS, PostgreSQL, Drizzle ORM y WhatsApp Cloud API
+  docs/        Guía de producción y guía de la API para el backoffice
 ```
+
+Documentación adicional:
+- [`docs/PRODUCTION.md`](docs/PRODUCTION.md) — pasos para salir a producción (Meta, deploy, migraciones, elegir LLM, roadmap de Google Calendar).
+- [`docs/BACKOFFICE.md`](docs/BACKOFFICE.md) — referencia completa de la API para quien construya o integre el panel administrativo.
 
 ## Requisitos
 
@@ -119,8 +124,22 @@ WHATSAPP_VERIFY_TOKEN=
 WHATSAPP_ACCESS_TOKEN=
 WHATSAPP_PHONE_NUMBER_ID=
 WHATSAPP_BUSINESS_ACCOUNT_ID=
+WHATSAPP_APP_SECRET=
+JWT_SECRET=
+CORS_ORIGINS=
+LLM_PROVIDER=
+LLM_API_KEY=
+LLM_MODEL=
 DATABASE_URL=postgresql://postgres:estiloturno_secure_pass_2026@localhost:5432/estiloturno
 ```
+
+`WHATSAPP_APP_SECRET` es el App Secret de la app de Meta (Meta Developers > tu app > Configuración básica). Se usa para validar la firma `X-Hub-Signature-256` de cada webhook entrante y rechazar payloads falsificados.
+
+`JWT_SECRET` firma los access tokens que emite `/auth/login` y `/auth/register` (HS256, expiran a las 8h). Usá un valor largo y aleatorio, distinto entre entornos.
+
+`CORS_ORIGINS` es una lista de orígenes permitidos separada por comas (ej. `https://app.tudominio.com,https://otro.dominio.com`). Sin esta variable, el backend solo acepta `http://localhost:3000`.
+
+`LLM_PROVIDER` (`anthropic` | `openai`) y `LLM_API_KEY` habilitan el motor de lenguaje natural del bot. `LLM_MODEL` es opcional (tiene default por proveedor). Sin `LLM_PROVIDER`/`LLM_API_KEY`, el bot usa un flujo de menús numéricos sin IA. Detalle completo en [`docs/PRODUCTION.md`](docs/PRODUCTION.md#4-elegir-proveedor-de-llm-para-el-bot).
 
 El puerto por defecto del backend es `3301`, definido en `src/main.ts` y en `.env.example`.
 
@@ -132,7 +151,11 @@ bun run build       # compila el backend
 bun run start       # ejecuta dist/main.js
 bun run start:prod  # ejecuta dist/main.js
 bun run db:seed     # inserta servicios iniciales en PostgreSQL
+bun run db:generate # genera un archivo SQL de migración a partir de schema.ts (no toca la DB)
+bun run db:migrate  # aplica las migraciones pendientes contra DATABASE_URL
 ```
+
+> Si tenés una base local con datos de antes de la fase multi-tenant, las migraciones agregan columnas `business_id NOT NULL` que van a fallar contra filas viejas sin negocio asociado. Lo más simple: resetear la base de dev (`docker compose down -v && up`) y correr `bunx drizzle-kit push` en vez de `db:migrate` para sincronizar el schema completo de una. `db:migrate` (con historial versionado) es para una base nueva desde cero — ver detalle en [`docs/PRODUCTION.md`](docs/PRODUCTION.md#3-migraciones-de-base-de-datos).
 
 ### Desarrollo local
 
@@ -148,7 +171,28 @@ http://localhost:3301
 
 ### Endpoints principales
 
-Agenda:
+Referencia completa con ejemplos de request/response en [`docs/BACKOFFICE.md`](docs/BACKOFFICE.md). Resumen:
+
+Autenticación (rate limit 5/min):
+
+```text
+POST /auth/register   # {businessName, name, email, password} -> crea negocio + usuario ADMIN, devuelve accessToken
+POST /auth/login      # {email, password} -> devuelve accessToken
+```
+
+Backoffice (requiere `Authorization: Bearer <accessToken>`, scoped al negocio del token):
+
+```text
+GET   /backoffice/business                # datos y configuración del negocio
+PATCH /backoffice/business                # (ADMIN) horario laboral, botEnabled, whatsappPhoneNumberId
+POST  /backoffice/services                # (ADMIN) crear servicio
+PATCH /backoffice/services/:id            # (ADMIN)
+DELETE /backoffice/services/:id           # (ADMIN)
+GET   /backoffice/appointments            # ?date=&status=
+PATCH /backoffice/appointments/:id        # reagendar o cambiar status
+```
+
+Agenda operativa (la usa el bot internamente, también expuesta al backoffice):
 
 ```text
 GET  /schedule/services
@@ -159,9 +203,9 @@ POST /schedule/appointments
 Webhook de WhatsApp:
 
 ```text
-GET  /webhooks/whatsapp
-POST /webhooks/whatsapp
-POST /webhooks/whatsapp/send-test-message
+GET  /webhooks/whatsapp                     # verificación de Meta (hub.verify_token)
+POST /webhooks/whatsapp                     # mensajes entrantes (valida firma X-Hub-Signature-256, enruta por negocio)
+POST /webhooks/whatsapp/send-test-message   # requiere Authorization: Bearer <token> de un usuario ADMIN
 ```
 
 Para exponer el backend local con ngrok:
