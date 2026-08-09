@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { AuthModule } from "../auth/auth.module";
 import { BusinessModule } from "../business/business.module";
 import { ScheduleModule } from "../schedule/schedule.module";
 import { HandleIncomingMessageUseCase } from "./application/use-cases/handle-incoming-message.use-case";
@@ -18,7 +19,7 @@ import { WhatsappSignatureGuard } from "./presentation/guards/whatsapp-signature
 import { WhatsappController } from "./presentation/whatsapp.controller";
 
 @Module({
-  imports: [ScheduleModule, BusinessModule],
+  imports: [AuthModule, ScheduleModule, BusinessModule],
   controllers: [WhatsappController],
   providers: [
     HandleIncomingMessageUseCase,
