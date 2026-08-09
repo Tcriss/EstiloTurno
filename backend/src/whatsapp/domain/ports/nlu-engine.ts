@@ -10,13 +10,22 @@ export interface NluToolDefinition {
 export type NluTurn =
   | { role: "user"; content: string }
   | { role: "assistant"; content: string }
-  | { role: "assistant_tool_call"; id: string; name: string; arguments: Record<string, unknown> }
+  | {
+      role: "assistant_tool_call";
+      id: string;
+      name: string;
+      arguments: Record<string, unknown>;
+      /** Dato opaco propio del proveedor (ej. thoughtSignature de Gemini) que debe rebotarse sin interpretar. */
+      providerData?: unknown;
+    }
   | { role: "tool_result"; toolCallId: string; name: string; content: string };
 
 export interface NluToolCall {
   id: string;
   name: string;
   arguments: Record<string, unknown>;
+  /** Dato opaco propio del proveedor que el use case debe reenviar en el turno assistant_tool_call siguiente. */
+  providerData?: unknown;
 }
 
 export interface NluResponse {

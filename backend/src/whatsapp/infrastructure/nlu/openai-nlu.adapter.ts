@@ -13,13 +13,15 @@ function toOpenAiMessages(turns: NluTurn[]): OpenAiMessage[] {
   const messages: OpenAiMessage[] = [];
   for (const turn of turns) {
     switch (turn.role) {
-      case "user":
+      case "user": {
         messages.push({ role: "user", content: turn.content });
         break;
-      case "assistant":
+      }
+      case "assistant": {
         messages.push({ role: "assistant", content: turn.content });
         break;
-      case "assistant_tool_call":
+      }
+      case "assistant_tool_call": {
         messages.push({
           role: "assistant",
           content: null,
@@ -28,9 +30,11 @@ function toOpenAiMessages(turns: NluTurn[]): OpenAiMessage[] {
           ],
         });
         break;
-      case "tool_result":
+      }
+      case "tool_result": {
         messages.push({ role: "tool", tool_call_id: turn.toolCallId, content: turn.content });
         break;
+      }
     }
   }
   return messages;

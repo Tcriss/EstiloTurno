@@ -15,24 +15,28 @@ function toAnthropicMessages(turns: NluTurn[]): AnthropicMessage[] {
   const messages: AnthropicMessage[] = [];
   for (const turn of turns) {
     switch (turn.role) {
-      case "user":
+      case "user": {
         messages.push({ role: "user", content: turn.content });
         break;
-      case "assistant":
+      }
+      case "assistant": {
         messages.push({ role: "assistant", content: turn.content });
         break;
-      case "assistant_tool_call":
+      }
+      case "assistant_tool_call": {
         messages.push({
           role: "assistant",
           content: [{ type: "tool_use", id: turn.id, name: turn.name, input: turn.arguments }],
         });
         break;
-      case "tool_result":
+      }
+      case "tool_result": {
         messages.push({
           role: "user",
           content: [{ type: "tool_result", tool_use_id: turn.toolCallId, content: turn.content }],
         });
         break;
+      }
     }
   }
   return messages;
