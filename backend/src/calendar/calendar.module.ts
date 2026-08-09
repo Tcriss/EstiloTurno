@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { AuthModule } from "../auth/auth.module";
 import { APPOINTMENT_CALENDAR_SYNC } from "../schedule/domain/ports/appointment-calendar-sync";
 import { DisconnectGoogleCalendarUseCase } from "./application/use-cases/disconnect-google-calendar.use-case";
 import { GetCalendarConnectionStatusUseCase } from "./application/use-cases/get-calendar-connection-status.use-case";
@@ -16,6 +17,7 @@ import { DrizzleCalendarCredentialsRepository } from "./infrastructure/persisten
 import { CalendarController, CalendarPublicController } from "./presentation/calendar.controller";
 
 @Module({
+  imports: [AuthModule],
   controllers: [CalendarController, CalendarPublicController],
   providers: [
     StartGoogleCalendarConnectionUseCase,

@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { AuthModule } from "../auth/auth.module";
 import { BusinessModule } from "../business/business.module";
 import { CalendarModule } from "../calendar/calendar.module";
 import { CreateAppointmentUseCase } from "./application/use-cases/create-appointment.use-case";
@@ -18,7 +19,7 @@ import { BackofficeServicesController } from "./presentation/backoffice-services
 import { ScheduleController } from "./presentation/schedule.controller";
 
 @Module({
-  imports: [BusinessModule, CalendarModule],
+  imports: [AuthModule, BusinessModule, CalendarModule],
   controllers: [ScheduleController, BackofficeAppointmentsController, BackofficeServicesController],
   providers: [
     GetServicesUseCase,
