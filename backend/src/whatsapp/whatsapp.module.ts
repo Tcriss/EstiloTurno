@@ -10,6 +10,7 @@ import { CONVERSATION_STATE_REPOSITORY } from "./domain/ports/conversation-state
 import { NLU_ENGINE, NluEngine } from "./domain/ports/nlu-engine";
 import { WHATSAPP_MESSENGER } from "./domain/ports/whatsapp-messenger";
 import { AnthropicNluAdapter } from "./infrastructure/nlu/anthropic-nlu.adapter";
+import { GeminiNluAdapter } from "./infrastructure/nlu/gemini-nlu.adapter";
 import { OpenAiNluAdapter } from "./infrastructure/nlu/openai-nlu.adapter";
 import { WhatsappCloudApiClient } from "./infrastructure/messaging/whatsapp-cloud-api.client";
 import { DrizzleConversationStateRepository } from "./infrastructure/persistence/drizzle-conversation-state.repository";
@@ -32,21 +33,35 @@ import { WhatsappController } from "./presentation/whatsapp.controller";
       inject: [ConfigService],
       useFactory: (configService: ConfigService): NluEngine | null => {
         const provider = configService.get<string>("LLM_PROVIDER");
-        const apiKey = configService.get<string>("LLM_API_KEY");
-        const model = configService.get<string>("LLM_MODEL");
-
-        if (!provider || !apiKey) {
+        if (!provider) {
           // Sin proveedor configurado, el bot cae al flujo de menús numéricos (fallback determinista)
           return null;
         }
 
+        // Vars específicas por proveedor (ANTHROPIC_API_KEY, GEMINI_MODEL, etc.) tienen prioridad
+        // sobre las genéricas LLM_API_KEY / LLM_MODEL, así se pueden tener las tres keys cargadas
+        // en simultáneo y alternar de proveedor solo tocando LLM_PROVIDER.
+        const resolve = (prefix: string) => ({
+          apiKey: configService.get<string>(`${prefix}_API_KEY`) ?? configService.get<string>("LLM_API_KEY"),
+          model: configService.get<string>(`${prefix}_MODEL`) ?? configService.get<string>("LLM_MODEL"),
+        });
+
         switch (provider) {
-          case "anthropic":
-            return new AnthropicNluAdapter(apiKey, model);
-          case "openai":
-            return new OpenAiNluAdapter(apiKey, model);
-          default:
+          case "anthropic": {
+            const { apiKey, model } = resolve("ANTHROPIC");
+            return apiKey ? new AnthropicNluAdapter(apiKey, model) : null;
+          }
+          case "openai": {
+            const { apiKey, model } = resolve("OPENAI");
+            return apiKey ? new OpenAiNluAdapter(apiKey, model) : null;
+          }
+          case "gemini": {
+            const { apiKey, model } = resolve("GEMINI");
+            return apiKey ? new GeminiNluAdapter(apiKey, model) : null;
+          }
+          default: {
             return null;
+          }
         }
       },
     },

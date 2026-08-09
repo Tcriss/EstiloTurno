@@ -77,10 +77,10 @@ export class NluConversationService {
       const response = await engine.chat({ systemPrompt, turns, tools: TOOLS });
 
       if (response.toolCall) {
-        const { id, name, arguments: args } = response.toolCall;
+        const { id, name, arguments: args, providerData } = response.toolCall;
         this.logger.log(`NLU tool call [${name}] ${JSON.stringify(args)}`);
         const result = await this.executeTool(business, phoneNumber, clientName, name, args);
-        turns.push({ role: "assistant_tool_call", id, name, arguments: args });
+        turns.push({ role: "assistant_tool_call", id, name, arguments: args, providerData });
         turns.push({ role: "tool_result", toolCallId: id, name, content: result });
         continue;
       }
@@ -172,8 +172,9 @@ export class NluConversationService {
           return JSON.stringify({ ok: true, appointmentId: appointment.id, date, time });
         }
 
-        default:
+        default: {
           return JSON.stringify({ error: `Herramienta desconocida: ${toolName}` });
+        }
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Error inesperado ejecutando la herramienta.";
