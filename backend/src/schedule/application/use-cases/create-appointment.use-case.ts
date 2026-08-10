@@ -1,5 +1,6 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException, Optional } from "@nestjs/common";
 import { Appointment } from "../../domain/entities/appointment.entity";
+import { APPOINTMENT_CALENDAR_SYNC, AppointmentCalendarSync } from "../../domain/ports/appointment-calendar-sync";
 import { SCHEDULE_REPOSITORY, ScheduleRepository } from "../../domain/ports/schedule.repository";
 import { GetAvailableSlotsUseCase } from "./get-available-slots.use-case";
 
@@ -14,9 +15,14 @@ export interface CreateAppointmentCommand {
 
 @Injectable()
 export class CreateAppointmentUseCase {
+  private readonly logger = new Logger(CreateAppointmentUseCase.name);
+
   constructor(
     @Inject(SCHEDULE_REPOSITORY) private readonly scheduleRepository: ScheduleRepository,
-    private readonly getAvailableSlotsUseCase: GetAvailableSlotsUseCase
+    private readonly getAvailableSlotsUseCase: GetAvailableSlotsUseCase,
+    @Optional()
+    @Inject(APPOINTMENT_CALENDAR_SYNC)
+    private readonly calendarSync?: AppointmentCalendarSync
   ) {}
 
   async execute(command: CreateAppointmentCommand): Promise<Appointment> {
@@ -38,7 +44,7 @@ export class CreateAppointmentUseCase {
 
     // El repo re-verifica el solapamiento dentro de una transacción con lock —
     // si otro cliente ganó el slot en el medio, lanza ConflictException.
-    return this.scheduleRepository.createAppointment({
+    const appointment = await this.scheduleRepository.createAppointment({
       businessId: command.businessId,
       phoneNumber: command.phoneNumber,
       clientName: command.clientName,
@@ -47,5 +53,25 @@ export class CreateAppointmentUseCase {
       time: command.time,
       durationMinutes: service.durationMinutes,
     });
+
+    // Best-effort: si el negocio no conectó Google Calendar, o si la sync falla,
+    // la cita ya quedó creada en nuestra base — nunca bloqueamos la respuesta al cliente.
+    if (this.calendarSync) {
+      this.calendarSync
+        .syncAppointmentCreated({
+          appointmentId: appointment.id,
+          businessId: command.businessId,
+          clientName: command.clientName,
+          serviceName: service.name,
+          date: command.date,
+          startTime: command.time,
+          durationMinutes: service.durationMinutes,
+        })
+        .catch((error) => {
+          this.logger.warn(`No se pudo sincronizar la cita #${appointment.id} con el calendario: ${error}`);
+        });
+    }
+
+    return appointment;
   }
 }
