@@ -15,6 +15,16 @@ export class DrizzleUserRepository implements UserRepository {
     return row ? this.toDomain(row) : null;
   }
 
+  async findById(id: number): Promise<User | null> {
+    const results = await this.db.select().from(schema.users).where(eq(schema.users.id, id)).limit(1);
+    const row = results[0];
+    return row ? this.toDomain(row) : null;
+  }
+
+  async updatePasswordHash(userId: number, passwordHash: string): Promise<void> {
+    await this.db.update(schema.users).set({ passwordHash }).where(eq(schema.users.id, userId));
+  }
+
   async createBusinessOwner(input: CreateBusinessOwnerInput): Promise<User> {
     return this.db.transaction(async (tx) => {
       const [business] = await tx.insert(schema.businesses).values({ name: input.businessName }).returning();

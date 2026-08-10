@@ -1,9 +1,168 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
   color-scheme: light;
+
+  /* shadcn semantic tokens, mapped to the EstiloTurno brand palette */
+  --background: #f7fafc;
+  --foreground: #181c1e;
+  --card: #ffffff;
+  --card-foreground: #181c1e;
+  --popover: #ffffff;
+  --popover-foreground: #181c1e;
+  --primary: #006a66;
+  --primary-foreground: #ffffff;
+  --secondary: #d2e1f6;
+  --secondary-foreground: #566476;
+  --muted: #ebeef0;
+  --muted-foreground: #3d4948;
+  --accent: #e5e9eb;
+  --accent-foreground: #181c1e;
+  --destructive: #ba1a1a;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #006a66;
+  --chart-1: #38b2ac;
+  --chart-2: #d2e1f6;
+  --chart-3: #494bd6;
+  --chart-4: #9497ff;
+  --chart-5: #ba1a1a;
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: #f7fafc;
+  --foreground: #181c1e;
+  --card: #ffffff;
+  --card-foreground: #181c1e;
+  --popover: #ffffff;
+  --popover-foreground: #181c1e;
+  --primary: #006a66;
+  --primary-foreground: #ffffff;
+  --secondary: #d2e1f6;
+  --secondary-foreground: #566476;
+  --muted: #ebeef0;
+  --muted-foreground: #3d4948;
+  --accent: #e5e9eb;
+  --accent-foreground: #181c1e;
+  --destructive: #ba1a1a;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #006a66;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Material Design 3 palette (pre-existing brand system, kept for components not yet migrated to shadcn semantic tokens) */
+  --color-primary-container: #38b2ac;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #003f3d;
+  --color-inverse-primary: #66d8d2;
+  --color-primary-fixed: #84f5ee;
+  --color-primary-fixed-dim: #66d8d2;
+  --color-on-primary-fixed: #00201e;
+  --color-on-primary-fixed-variant: #00504d;
+
+  --color-secondary-color: #516071;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #d2e1f6;
+  --color-on-secondary-container: #566476;
+  --color-secondary-fixed: #d5e4f9;
+  --color-secondary-fixed-dim: #b9c8dc;
+  --color-on-secondary-fixed: #0e1d2c;
+  --color-on-secondary-fixed-variant: #3a4859;
+
+  --color-tertiary: #494bd6;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #9497ff;
+  --color-on-tertiary-container: #1b14b1;
+  --color-tertiary-fixed: #e1e0ff;
+  --color-tertiary-fixed-dim: #c0c1ff;
+  --color-on-tertiary-fixed: #07006c;
+  --color-on-tertiary-fixed-variant: #2f2ebe;
+
+  --color-error-color: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-on-background: #181c1e;
+  --color-surface: #f7fafc;
+  --color-surface-dim: #d7dadc;
+  --color-surface-bright: #f7fafc;
+  --color-surface-variant: #e0e3e5;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f4f6;
+  --color-surface-container: #ebeef0;
+  --color-surface-container-high: #e5e9eb;
+  --color-surface-container-highest: #e0e3e5;
+  --color-on-surface: #181c1e;
+  --color-on-surface-variant: #3d4948;
+  --color-inverse-surface: #2d3133;
+  --color-inverse-on-surface: #eef1f3;
+  --color-outline: #6d7a78;
+  --color-outline-variant: #bcc9c7;
+  --color-surface-tint: #006a66;
+
+  /* Brand tokens */
+  --color-slate-dark: #0f172a;
+  --color-border-subtle: #e2e8f0;
+  --color-text-main: #2d3748;
+  --color-text-muted: #718096;
+
+  /* Legacy aliases (kept for backwards compat with existing auth components) */
+  --color-navy: #1f2d3d;
+  --color-teal: #38b2ac;
+  --color-blue-gray: #9fb7c1;
+  --color-mist: #e2e8f0;
+
+  --shadow-soft: 0 22px 70px rgba(31, 45, 61, 0.12);
+  --shadow-panel: 0 16px 46px rgba(31, 45, 61, 0.1);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-login: 0 8px 24px rgba(0, 106, 102, 0.16);
+
+  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-geist: var(--font-geist), Geist, Inter, sans-serif;
+  --font-heading: var(--font-geist), Geist, Inter, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+
+  --spacing-gutter: 24px;
+  --spacing-sidebar-width: 260px;
+  --spacing-container-max: 1440px;
 }
 
 * {
@@ -17,9 +176,6 @@ body {
 
 body {
   margin: 0;
-  background: #f7fafc;
-  color: #181c1e;
-  font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
   overflow-x: hidden;
 }
 
@@ -65,5 +221,14 @@ input::-ms-clear {
 @media (prefers-reduced-motion: reduce) {
   .floating-preview {
     animation: none;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
   }
 }

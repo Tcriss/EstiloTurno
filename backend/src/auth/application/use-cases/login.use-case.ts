@@ -3,6 +3,7 @@ import { User } from "../../domain/entities/user.entity";
 import { PASSWORD_HASHER, PasswordHasher } from "../../domain/ports/password-hasher";
 import { TOKEN_ISSUER, TokenIssuer } from "../../domain/ports/token-issuer";
 import { USER_REPOSITORY, UserRepository } from "../../domain/ports/user.repository";
+import { RefreshTokenIssuerService } from "../services/refresh-token-issuer.service";
 
 export interface LoginInput {
   email: string;
@@ -12,6 +13,7 @@ export interface LoginInput {
 export interface LoginResult {
   user: User;
   accessToken: string;
+  refreshToken: string;
 }
 
 @Injectable()
@@ -19,7 +21,8 @@ export class LoginUseCase {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository,
     @Inject(PASSWORD_HASHER) private readonly passwordHasher: PasswordHasher,
-    @Inject(TOKEN_ISSUER) private readonly tokenIssuer: TokenIssuer
+    @Inject(TOKEN_ISSUER) private readonly tokenIssuer: TokenIssuer,
+    private readonly refreshTokenIssuer: RefreshTokenIssuerService
   ) {}
 
   async execute(input: LoginInput): Promise<LoginResult> {
@@ -40,6 +43,8 @@ export class LoginUseCase {
       role: user.role,
     });
 
-    return { user, accessToken };
+    const refreshToken = await this.refreshTokenIssuer.issue(user.id);
+
+    return { user, accessToken, refreshToken };
   }
 }
