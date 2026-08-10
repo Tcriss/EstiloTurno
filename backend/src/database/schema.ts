@@ -9,6 +9,7 @@ import {
   jsonb,
   serial,
   boolean,
+  text,
   unique,
 } from "drizzle-orm/pg-core";
 
@@ -75,6 +76,21 @@ export const conversationStates = pgTable(
   },
   (table) => [unique("conversation_states_phone_business_unique").on(table.phone, table.businessId)]
 );
+
+export const businessCalendarCredentials = pgTable("business_calendar_credentials", {
+  id: serial("id").primaryKey(),
+  businessId: integer("business_id")
+    .references(() => businesses.id, { onDelete: "cascade" })
+    .notNull()
+    .unique(),
+  provider: varchar("provider", { length: 20 }).default("google").notNull(),
+  // access_token/refresh_token viajan cifrados (AES-256-GCM) — ver infrastructure/crypto/token-cipher.ts
+  accessToken: text("access_token").notNull(),
+  refreshToken: text("refresh_token").notNull(),
+  tokenExpiryDate: timestamp("token_expiry_date").notNull(),
+  scope: varchar("scope", { length: 255 }).notNull(),
+  connectedAt: timestamp("connected_at").defaultNow().notNull(),
+});
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
