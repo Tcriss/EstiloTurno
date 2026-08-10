@@ -34,6 +34,9 @@ import { RolesGuard } from "./presentation/guards/roles.guard";
     { provide: PASSWORD_HASHER, useClass: BcryptPasswordHasher },
     { provide: TOKEN_ISSUER, useClass: JwtTokenIssuer },
   ],
-  exports: [JwtAuthGuard, RolesGuard],
+  // TOKEN_ISSUER también se exporta: aunque el módulo es @Global, Nest reconstruye
+  // JwtAuthGuard por cada módulo consumidor que lo usa vía @UseGuards(JwtAuthGuard),
+  // y esa reconstrucción necesita resolver TOKEN_ISSUER en el contexto de ESE módulo.
+  exports: [JwtAuthGuard, RolesGuard, TOKEN_ISSUER],
 })
 export class AuthModule {}

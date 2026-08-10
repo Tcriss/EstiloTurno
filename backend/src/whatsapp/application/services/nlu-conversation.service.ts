@@ -54,7 +54,7 @@ export class NluConversationService {
     private readonly getServicesUseCase: GetServicesUseCase,
     private readonly getAvailableSlotsUseCase: GetAvailableSlotsUseCase,
     private readonly createAppointmentUseCase: CreateAppointmentUseCase
-  ) {}
+  ) { }
 
   async handleMessage(
     engine: NluEngine,
@@ -98,9 +98,9 @@ export class NluConversationService {
       ...history,
       { role: "user", content: userMessage },
       { role: "assistant", content: reply },
-    ].slice(-MAX_HISTORY_MESSAGES);
+    ];
 
-    return { reply, history: newHistory };
+    return { reply, history: newHistory.slice(-MAX_HISTORY_MESSAGES) };
   }
 
   private async buildSystemPrompt(business: Business, clientName: string): Promise<string> {
@@ -108,11 +108,11 @@ export class NluConversationService {
     const catalog =
       services.length > 0
         ? services
-            .map(
-              (service) =>
-                `- id=${service.id} | ${service.name} | RD$ ${parseFloat(service.price).toLocaleString("es-DO")} | ${service.durationMinutes} min`
-            )
-            .join("\n")
+          .map(
+            (service) =>
+              `- id=${service.id} | ${service.name} | RD$ ${parseFloat(service.price).toLocaleString("es-DO")} | ${service.durationMinutes} min`
+          )
+          .join("\n")
         : "(este negocio aún no tiene servicios cargados)";
 
     return [
