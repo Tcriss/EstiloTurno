@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getSupabaseClient } from "@/lib/supabase";
 
-export function WelcomeHeader() {
+export function WelcomeHeader({ firstName = "" }: { firstName?: string }) {
   const [greeting, setGreeting] = useState("Bienvenido");
-  const [firstName, setFirstName] = useState("");
   const [dateLabel, setDateLabel] = useState("");
 
   useEffect(() => {
@@ -24,24 +22,14 @@ export function WelcomeHeader() {
         year: "numeric",
       }),
     );
-
-    const supabase = getSupabaseClient();
-    if (!supabase) return;
-    supabase.auth.getUser().then(({ data }) => {
-      const user = data?.user;
-      if (!user) return;
-      const fullName: string = user.user_metadata?.full_name ?? "";
-      const first = fullName.trim().split(" ")[0];
-      if (first) setFirstName(first);
-    });
   }, []);
 
   return (
     <div className="mb-6">
-      <h1 className="font-geist text-2xl font-bold text-[#0F172A]">
+      <h1 className="font-geist text-2xl font-bold text-text-main">
         {greeting}{firstName ? `, ${firstName}` : ""} 👋
       </h1>
-      <p className="mt-1 capitalize text-sm text-[#718096]">{dateLabel}</p>
+      <p className="mt-1 capitalize text-sm text-text-muted">{dateLabel}</p>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Geist, JetBrains_Mono } from "next/font/google";
-import "sileo/styles.css";
 import "./globals.css";
-import { NotificationToaster } from "@/components/ui/NotificationToaster";
+import { Providers } from "./providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,8 +35,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${inter.variable} ${geist.variable} ${jetbrainsMono.variable}`}>
-        <NotificationToaster />
-        {children}
+        <Providers>
+          <Toaster />
+          {children}
+        </Providers>
       </body>
     </html>
   );

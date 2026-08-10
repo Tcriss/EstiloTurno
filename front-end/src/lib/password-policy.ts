@@ -1,4 +1,5 @@
-export const minPasswordLength = 6;
+// Debe coincidir con @MinLength(8) de RegisterDto/ResetPasswordDto en el backend.
+export const minPasswordLength = 8;
 
 export function getPasswordValidationError(password: string) {
   if (!password) {

@@ -11,9 +11,11 @@ export interface CreateBusinessOwnerInput {
 
 export interface UserRepository {
   findByEmail(email: string): Promise<User | null>;
+  findById(id: number): Promise<User | null>;
   /**
    * Crea el negocio y su usuario ADMIN dueño en una sola transacción —
    * si falla el usuario, no queda un negocio huérfano.
    */
   createBusinessOwner(input: CreateBusinessOwnerInput): Promise<User>;
+  updatePasswordHash(userId: number, passwordHash: string): Promise<void>;
 }

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv input_tmp.tsx input.tsx)",
+      "Bash(git mv *)",
+      "Bash(mv Checkbox.tsx checkbox_tmp.tsx)",
+      "Bash(mv checkbox_tmp.tsx checkbox.tsx)",
+      "Bash(mv Button.tsx button_tmp.tsx)",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\.bun\\\\bin;\" + $env:PATH; cd \"c:\\\\Users\\\\Aleja_ul3g1nn\\\\Desktop\\\\Proyectos\\\\EstiloTurno\\\\front-end\"; bun add react-hook-form zod @hookform/resolvers @tanstack/react-query server-only)",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\.bun\\\\bin;\" + $env:PATH; cd \"c:\\\\Users\\\\Aleja_ul3g1nn\\\\Desktop\\\\Proyectos\\\\EstiloTurno\\\\backend\"; bun install)",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\.bun\\\\bin;\" + $env:PATH; cd \"c:\\\\Users\\\\Aleja_ul3g1nn\\\\Desktop\\\\Proyectos\\\\EstiloTurno\\\\backend\"; bun run db:generate)",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\.bun\\\\bin;\" + $env:PATH; cd \"c:\\\\Users\\\\Aleja_ul3g1nn\\\\Desktop\\\\Proyectos\\\\EstiloTurno\\\\backend\"; bun run build)"
+    ]
+  }
+}

@@ -15,6 +15,13 @@
       "when": 1786246353977,
       "tag": "0001_lively_omega_red",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786318833819,
+      "tag": "0002_huge_kate_bishop",
+      "breakpoints": true
     }
   ]
 }

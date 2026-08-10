@@ -1,23 +1,17 @@
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
-import { createServerClient } from "@/lib/supabase-server";
+import { AuthExpiredError } from "@/lib/api-server";
+import { getCurrentUser } from "@/services/session.service";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  const supabase = await createServerClient();
-
-  if (!supabase) {
-    redirect("/login");
+  try {
+    const user = await getCurrentUser();
+    return <DashboardShell user={user}>{children}</DashboardShell>;
+  } catch (error) {
+    if (error instanceof AuthExpiredError) {
+      redirect("/login");
+    }
+    throw error;
   }
-
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    redirect("/login");
-  }
-
-  return <DashboardShell>{children}</DashboardShell>;
 }

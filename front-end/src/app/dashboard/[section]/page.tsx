@@ -1,13 +1,5 @@
 import { notFound } from "next/navigation";
-import {
-  BarChart3,
-  CalendarDays,
-  Scissors,
-  Settings,
-  UserRound,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { BarChart3, Scissors, UserRound, Users, type LucideIcon } from "lucide-react";
 import { ComingSoon } from "@/components/dashboard/ComingSoon";
 
 type SectionConfig = {
@@ -17,11 +9,6 @@ type SectionConfig = {
 };
 
 const SECTIONS: Record<string, SectionConfig> = {
-  agenda: {
-    title: "Agenda",
-    description: "Aquí podrás administrar horarios, citas y disponibilidad de tu equipo.",
-    icon: CalendarDays,
-  },
   clientes: {
     title: "Clientes",
     description: "Aquí podrás consultar perfiles, historial de citas y preferencias de tus clientes.",
@@ -41,11 +28,6 @@ const SECTIONS: Record<string, SectionConfig> = {
     title: "Analíticas",
     description: "Aquí encontrarás reportes de citas, ocupación, ingresos y rendimiento del negocio.",
     icon: BarChart3,
-  },
-  configuracion: {
-    title: "Configuración",
-    description: "Aquí podrás personalizar los datos, preferencias e integraciones de tu negocio.",
-    icon: Settings,
   },
   perfil: {
     title: "Mi perfil",

@@ -96,8 +96,8 @@ export class NluConversationService {
 
     const newHistory: HistoryMessage[] = [
       ...history,
-      { role: "user", content: userMessage },
-      { role: "assistant", content: reply },
+      { role: "user" as const, content: userMessage },
+      { role: "assistant" as const, content: reply },
     ].slice(-MAX_HISTORY_MESSAGES);
 
     return { reply, history: newHistory };
