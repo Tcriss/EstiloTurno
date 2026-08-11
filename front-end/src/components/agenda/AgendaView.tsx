@@ -63,7 +63,7 @@ export function AgendaView({ initialAppointments, initialDate }: AgendaViewProps
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
           <Popover>
@@ -98,12 +98,12 @@ export function AgendaView({ initialAppointments, initialDate }: AgendaViewProps
         <NewAppointmentDialog />
       </div>
 
-      <Card className="shadow-card">
+      <Card>
         <CardContent className="px-0">
           {isLoading ? (
-            <p className="py-10 text-center text-sm text-text-muted">Cargando turnos...</p>
+            <p className="py-10 text-center text-sm text-muted-foreground">Cargando turnos...</p>
           ) : rows.length === 0 ? (
-            <p className="py-10 text-center text-sm text-text-muted">No hay turnos para esta fecha</p>
+            <p className="py-10 text-center text-sm text-muted-foreground">No hay turnos para esta fecha</p>
           ) : (
             <Table>
               <TableHeader>

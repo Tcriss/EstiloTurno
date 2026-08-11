@@ -49,26 +49,26 @@ export type ServiceStat = {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const AVATAR_COLORS = [
-  "bg-teal/10 text-primary",
-  "bg-secondary text-secondary-foreground",
-  "bg-tertiary-fixed/50 text-tertiary",
-  "bg-slate-dark/10 text-slate-dark",
+  "bg-primary/10 text-primary",
+  "bg-muted text-muted-foreground",
+  "bg-foreground/5 text-foreground",
+  "bg-primary/5 text-primary",
 ];
 
-const SERVICE_BAR_COLORS = ["bg-primary", "bg-teal", "bg-secondary-color", "bg-tertiary"];
+const SERVICE_BAR_COLORS = ["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4"];
 
 // Estados que ocupan un slot de la agenda — igual criterio que SLOT_BLOCKING_STATUSES en el backend.
 const SLOT_BLOCKING_STATUSES: AppointmentStatus[] = ["PENDING", "CONFIRMED"];
 
 const ACTIVITY_TYPE_META: Record<ActivityItem["type"], Pick<ActivityItem, "label" | "labelColor" | "dot" | "ring">> = {
-  booking: { label: "Turno:", labelColor: "text-text-main", dot: "bg-primary", ring: "bg-teal/20" },
+  booking: { label: "Turno:", labelColor: "text-foreground", dot: "bg-primary", ring: "bg-primary/15" },
   cancellation: {
     label: "Cancelación:",
-    labelColor: "text-error-color",
-    dot: "bg-error-color",
-    ring: "bg-error-container",
+    labelColor: "text-destructive",
+    dot: "bg-destructive",
+    ring: "bg-destructive/15",
   },
-  completion: { label: "Completado:", labelColor: "text-text-main", dot: "bg-secondary-color", ring: "bg-secondary" },
+  completion: { label: "Completado:", labelColor: "text-foreground", dot: "bg-muted-foreground", ring: "bg-muted" },
 };
 
 function todayIso(): string {

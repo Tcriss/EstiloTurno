@@ -13,9 +13,11 @@ export function DashboardShell({ children, user }: { children: ReactNode; user: 
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main content — offset by sidebar width on desktop */}
-      <div className="flex min-h-screen w-full flex-col lg:pl-64">
+      <div className="flex min-h-screen w-full flex-col lg:pl-60">
         <TopBar user={user} onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+          {children}
+        </main>
       </div>
     </div>
   );

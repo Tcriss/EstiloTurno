@@ -25,11 +25,12 @@ export function WelcomeHeader({ firstName = "" }: { firstName?: string }) {
   }, []);
 
   return (
-    <div className="mb-6">
-      <h1 className="font-geist text-2xl font-bold text-text-main">
-        {greeting}{firstName ? `, ${firstName}` : ""} 👋
+    <div>
+      <h1 className="font-heading text-xl font-semibold tracking-tight text-foreground">
+        {greeting}
+        {firstName ? `, ${firstName}` : ""}
       </h1>
-      <p className="mt-1 capitalize text-sm text-text-muted">{dateLabel}</p>
+      <p className="mt-1 text-sm capitalize text-muted-foreground">{dateLabel}</p>
     </div>
   );
 }

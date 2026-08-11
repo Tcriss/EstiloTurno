@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { Logo } from "@/components/brand/Logo";
+import { ThemeToggle } from "@/components/dashboard/ThemeToggle";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
 type NavItem = {
@@ -35,12 +36,12 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="px-5 py-6">
-        <Logo darkBg compact />
+    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
+      <div className="flex h-14 items-center border-b border-sidebar-border px-5">
+        <Logo compact />
       </div>
 
-      <nav className="mt-2 flex-1 space-y-1 px-3" aria-label="Navegación principal">
+      <nav className="flex-1 space-y-0.5 p-3" aria-label="Navegación principal">
         {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
           const isActive = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
           return (
@@ -48,21 +49,25 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
               key={href}
               href={href}
               onClick={onNavigate}
+              aria-current={isActive ? "page" : undefined}
               className={clsx(
-                "flex items-center gap-3 rounded-lg border-l-4 px-3 py-3 text-sm font-semibold transition",
+                "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
                 isActive
-                  ? "border-teal bg-slate-dark/40 text-white"
-                  : "border-transparent text-white/50 hover:bg-slate-dark/20 hover:text-white/80",
+                  ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
+                  : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
               )}
             >
-              <Icon className={clsx("h-5 w-5 shrink-0", isActive ? "text-teal" : "text-white/50")} aria-hidden="true" />
+              <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
               {label}
             </Link>
           );
         })}
       </nav>
 
-      <div className="h-6" />
+      <div className="flex items-center justify-between border-t border-sidebar-border px-3 py-3">
+        <ThemeToggle />
+        <span className="pr-2 text-xs text-muted-foreground">© EstiloTurno</span>
+      </div>
     </div>
   );
 }
@@ -76,13 +81,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   return (
     <>
       {/* Desktop sidebar — always visible */}
-      <aside className="fixed left-0 top-0 z-50 hidden h-full w-64 bg-slate-dark lg:flex lg:flex-col">
+      <aside className="fixed left-0 top-0 z-50 hidden h-full w-60 border-r border-sidebar-border lg:flex lg:flex-col">
         <SidebarNav />
       </aside>
 
       {/* Mobile sidebar — drawer */}
       <Sheet open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
-        <SheetContent side="left" className="w-64 bg-slate-dark p-0 lg:hidden [&_[data-slot=sheet-close]]:text-white">
+        <SheetContent side="left" className="w-60 bg-sidebar p-0 lg:hidden">
           <SheetTitle className="sr-only">Navegación principal</SheetTitle>
           <SidebarNav onNavigate={onClose} />
         </SheetContent>
