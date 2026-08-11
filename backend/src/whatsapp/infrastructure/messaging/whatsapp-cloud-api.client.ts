@@ -16,7 +16,7 @@ export class WhatsappCloudApiClient implements WhatsappMessenger {
       throw new InternalServerErrorException("WhatsApp credentials are not configured.");
     }
 
-    const response = await fetch(`https://graph.facebook.com/v20.0/${senderPhoneNumberId}/messages`, {
+    const response = await fetch(`https://graph.facebook.com/v25.0/${senderPhoneNumberId}/messages`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
