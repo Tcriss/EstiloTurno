@@ -14,6 +14,11 @@ import { parseWhatsAppWebhook } from "../../infrastructure/messaging/whatsapp-we
 import { handleChatState } from "../services/conversation-flow";
 import { NluConversationService } from "../services/nlu-conversation.service";
 
+// Enmascara el teléfono en logs, ej: 18095551234 -> ***1234. Nunca logueamos el texto del mensaje.
+function maskPhone(phone: string): string {
+  return phone.length <= 4 ? "***" : `***${phone.slice(-4)}`;
+}
+
 @Injectable()
 export class HandleIncomingMessageUseCase {
   private readonly logger = new Logger(HandleIncomingMessageUseCase.name);
@@ -37,6 +42,7 @@ export class HandleIncomingMessageUseCase {
     }
 
     const { from: phoneNumber, name: clientName, body: messageBody, phoneNumberId } = parsed;
+    this.logger.log(`Mensaje entrante de ${maskPhone(phoneNumber)}`);
 
     try {
       const business = await this.resolveBusinessForWebhookUseCase.execute(phoneNumberId);

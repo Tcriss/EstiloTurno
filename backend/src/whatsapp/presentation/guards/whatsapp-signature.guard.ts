@@ -4,12 +4,15 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { createHmac, timingSafeEqual } from "crypto";
 
 @Injectable()
 export class WhatsappSignatureGuard implements CanActivate {
+  private readonly logger = new Logger(WhatsappSignatureGuard.name);
+
   constructor(private readonly configService: ConfigService) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -24,6 +27,7 @@ export class WhatsappSignatureGuard implements CanActivate {
     const rawBody: Buffer | undefined = request.rawBody;
 
     if (typeof signatureHeader !== "string" || !rawBody) {
+      this.logger.warn("Webhook de WhatsApp rechazado: falta el header de firma.");
       throw new ForbiddenException("Missing WhatsApp webhook signature.");
     }
 
@@ -35,6 +39,7 @@ export class WhatsappSignatureGuard implements CanActivate {
       expectedBuffer.length === receivedBuffer.length && timingSafeEqual(expectedBuffer, receivedBuffer);
 
     if (!isValid) {
+      this.logger.warn("Webhook de WhatsApp rechazado: firma inválida (WHATSAPP_APP_SECRET no coincide).");
       throw new ForbiddenException("Invalid WhatsApp webhook signature.");
     }
 

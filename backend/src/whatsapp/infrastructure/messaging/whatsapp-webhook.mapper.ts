@@ -1,3 +1,7 @@
+import { Logger } from "@nestjs/common";
+
+const logger = new Logger("WhatsappWebhookMapper");
+
 export interface IncomingMessageInfo {
   from: string; // Número de teléfono (wa_id)
   name: string; // Nombre del perfil
@@ -23,7 +27,8 @@ export function parseWhatsAppWebhook(body: any): IncomingMessageInfo | null {
       phoneNumberId: change?.metadata?.phone_number_id ?? null,
     };
   } catch (error) {
-    console.error("Error parsing WhatsApp webhook:", error);
+    // Solo logueamos que el payload de Meta vino mal formado, nunca su contenido.
+    logger.error(`Error parseando webhook de WhatsApp: ${(error as Error).message}`);
     return null;
   }
 }

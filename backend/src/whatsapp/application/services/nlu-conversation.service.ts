@@ -78,7 +78,7 @@ export class NluConversationService {
 
       if (response.toolCall) {
         const { id, name, arguments: args, providerData } = response.toolCall;
-        this.logger.log(`NLU tool call [${name}] ${JSON.stringify(args)}`);
+        this.logger.log(`NLU tool call: ${name}`);
         const result = await this.executeTool(business, phoneNumber, clientName, name, args);
         turns.push({ role: "assistant_tool_call", id, name, arguments: args, providerData });
         turns.push({ role: "tool_result", toolCallId: id, name, content: result });
