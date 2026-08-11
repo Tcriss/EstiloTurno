@@ -15,7 +15,7 @@ import { PASSWORD_RESET_TOKEN_REPOSITORY } from "./domain/ports/password-reset-t
 import { REFRESH_TOKEN_REPOSITORY } from "./domain/ports/refresh-token.repository";
 import { TOKEN_ISSUER } from "./domain/ports/token-issuer";
 import { USER_REPOSITORY } from "./domain/ports/user.repository";
-import { NodemailerEmailSender } from "./infrastructure/email/nodemailer-email-sender";
+import { ResendEmailSender } from "./infrastructure/email/resend-email-sender";
 import { DrizzlePasswordResetTokenRepository } from "./infrastructure/persistence/drizzle-password-reset-token.repository";
 import { DrizzleRefreshTokenRepository } from "./infrastructure/persistence/drizzle-refresh-token.repository";
 import { DrizzleUserRepository } from "./infrastructure/persistence/drizzle-user.repository";
@@ -53,7 +53,7 @@ import { RolesGuard } from "./presentation/guards/roles.guard";
     { provide: TOKEN_ISSUER, useClass: JwtTokenIssuer },
     { provide: REFRESH_TOKEN_REPOSITORY, useClass: DrizzleRefreshTokenRepository },
     { provide: PASSWORD_RESET_TOKEN_REPOSITORY, useClass: DrizzlePasswordResetTokenRepository },
-    { provide: EMAIL_SENDER, useClass: NodemailerEmailSender },
+    { provide: EMAIL_SENDER, useClass: ResendEmailSender },
   ],
   // TOKEN_ISSUER debe exportarse: JwtAuthGuard lo inyecta, y @Global() solo expone
   // los providers listados acá — sin esto, cualquier módulo que use @UseGuards(JwtAuthGuard)
