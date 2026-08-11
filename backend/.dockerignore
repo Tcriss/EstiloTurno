@@ -1,0 +1,7 @@
+node_modules
+dist
+.env
+.env.example
+docker-compose.arm.yml
+docker-compose.x86.yml
+*.md

@@ -1,0 +1,29 @@
+name: frontend-ci
+
+on:
+  push:
+    branches: [main]
+    paths: ["front-end/**"]
+  pull_request:
+    branches: [main]
+    paths: ["front-end/**"]
+
+defaults:
+  run:
+    working-directory: front-end
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run lint
+
+      - run: bun run build
