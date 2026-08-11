@@ -19,6 +19,7 @@ export const DRIZZLE = "DRIZZLE";
         }
         const pool = new Pool({
           connectionString,
+          ssl: configService.get<string>("NODE_ENV") === "production" ? { rejectUnauthorized: false } : undefined,
         });
         return drizzle(pool, { schema });
       },
