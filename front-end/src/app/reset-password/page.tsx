@@ -4,7 +4,7 @@ import { ResetPasswordForm } from "@/components/auth/ResetPasswordForm";
 
 export default function ResetPasswordPage() {
   return (
-    <AuthLayout mode="login">
+    <AuthLayout>
       <Suspense>
         <ResetPasswordForm />
       </Suspense>

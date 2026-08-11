@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, CheckCircle2, Circle, Lock } from "lucide-react";
+import { Check, Circle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -57,16 +57,22 @@ export function ResetPasswordForm() {
 
   return (
     <form className="min-w-0 space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="pt-2">
-        <h1 className="text-3xl font-extrabold tracking-normal text-navy">Nueva contraseña</h1>
-        <p className="mt-3 break-words text-base leading-7 text-text-muted">
+      <div>
+        <h1 className="font-heading text-lg font-semibold tracking-tight text-foreground">Nueva contraseña</h1>
+        <p className="mt-1 break-words text-sm leading-6 text-muted-foreground">
           Crea una contraseña nueva para recuperar el acceso a tu cuenta.
         </p>
       </div>
 
       {!token && (
-        <p className="rounded-lg border border-error-color/30 bg-error-container/40 px-4 py-3 text-sm text-on-error-container">
+        <p className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2.5 text-sm text-destructive">
           Abre esta pantalla desde el enlace de recuperación que recibiste por correo.
+        </p>
+      )}
+
+      {successMessage && (
+        <p className="rounded-md border border-border bg-muted/50 px-3 py-2.5 text-sm text-muted-foreground">
+          {successMessage}
         </p>
       )}
 
@@ -74,49 +80,45 @@ export function ResetPasswordForm() {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field>
             <FieldLabel htmlFor="password">Nueva contraseña</FieldLabel>
-            <div className="relative">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-              <Input
-                id="password"
-                type="password"
-                autoComplete="new-password"
-                placeholder="••••••••"
-                className="h-11 pl-10"
-                aria-invalid={Boolean(errors.password)}
-                disabled={isDisabled}
-                {...register("password")}
-              />
-            </div>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="new-password"
+              placeholder="••••••••"
+              aria-invalid={Boolean(errors.password)}
+              disabled={isDisabled}
+              {...register("password")}
+            />
             <FieldError errors={errors.password ? [errors.password] : undefined} />
           </Field>
           <Field>
             <FieldLabel htmlFor="confirmPassword">Confirmar contraseña</FieldLabel>
-            <div className="relative">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-              <Input
-                id="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                placeholder="••••••••"
-                className="h-11 pl-10"
-                aria-invalid={Boolean(errors.confirmPassword)}
-                disabled={isDisabled}
-                {...register("confirmPassword")}
-              />
-            </div>
+            <Input
+              id="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              placeholder="••••••••"
+              aria-invalid={Boolean(errors.confirmPassword)}
+              disabled={isDisabled}
+              {...register("confirmPassword")}
+            />
             <FieldError errors={errors.confirmPassword ? [errors.confirmPassword] : undefined} />
           </Field>
         </div>
 
-        <ul className="grid gap-2 rounded-lg border border-mist bg-surface-container-low px-4 py-3 text-sm sm:grid-cols-2">
+        <ul className="grid gap-2 rounded-md border border-border bg-muted/50 px-3 py-2.5 text-xs sm:grid-cols-2">
           {passwordChecks.map((check) => {
-            const Icon = check.isMet ? CheckCircle2 : Circle;
+            const Icon = check.isMet ? Check : Circle;
             return (
               <li
                 key={check.label}
-                className={check.isMet ? "flex items-center gap-2 font-semibold text-teal" : "flex items-center gap-2 text-text-muted"}
+                className={
+                  check.isMet
+                    ? "flex items-center gap-2 font-medium text-primary"
+                    : "flex items-center gap-2 text-muted-foreground"
+                }
               >
-                <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 <span>{check.label}</span>
               </li>
             );
@@ -124,13 +126,12 @@ export function ResetPasswordForm() {
         </ul>
       </FieldGroup>
 
-      <Button type="submit" className="h-12 w-full text-base font-semibold" disabled={isDisabled}>
+      <Button type="submit" className="w-full" disabled={isDisabled}>
         {isLoading ? "Actualizando..." : "Actualizar contraseña"}
-        {!isLoading && <ArrowRight className="h-5 w-5" aria-hidden="true" />}
       </Button>
 
-      <p className="text-center text-sm text-navy">
-        <Link className="font-bold text-teal hover:text-cyan-700" href="/login">
+      <p className="text-center text-sm">
+        <Link className="font-medium text-muted-foreground hover:text-foreground" href="/login">
           Ir a iniciar sesión
         </Link>
       </p>

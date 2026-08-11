@@ -30,13 +30,13 @@ export function TopBar({ user, onMenuClick }: TopBarProps) {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-card px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur sm:px-6 lg:px-8">
       <button
-        className="rounded-lg p-2 text-text-muted hover:bg-background hover:text-text-main lg:hidden"
+        className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
         onClick={onMenuClick}
         aria-label="Abrir menú"
       >
-        <Menu className="h-6 w-6" />
+        <Menu className="h-5 w-5" />
       </button>
 
       <div className="hidden lg:block" />
@@ -45,27 +45,27 @@ export function TopBar({ user, onMenuClick }: TopBarProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-background"
+              className="flex items-center gap-2.5 rounded-md px-2 py-1.5 transition-colors hover:bg-accent"
               aria-label="Menú de cuenta"
             >
-              <Avatar>
-                <AvatarFallback className="bg-teal/15 font-bold text-primary">
+              <Avatar className="h-7 w-7">
+                <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
                   {getInitials(user.name)}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden text-left sm:block">
-                <p className="text-sm font-semibold text-text-main">{user.name}</p>
-                <p className="text-xs text-text-muted">{user.email}</p>
+                <p className="text-sm font-medium leading-tight text-foreground">{user.name}</p>
+                <p className="text-xs leading-tight text-muted-foreground">{user.email}</p>
               </div>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-52">
             <DropdownMenuItem onSelect={() => router.push("/dashboard/perfil")}>
-              <User className="h-4 w-4 text-text-muted" />
+              <User className="h-4 w-4 text-muted-foreground" />
               Mi perfil
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => router.push("/dashboard/configuracion")}>
-              <Settings className="h-4 w-4 text-text-muted" />
+              <Settings className="h-4 w-4 text-muted-foreground" />
               Configuración
             </DropdownMenuItem>
             <DropdownMenuSeparator />

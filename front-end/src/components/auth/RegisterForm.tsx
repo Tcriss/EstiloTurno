@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Building2, CheckCircle2, Circle, Lock, Mail, User } from "lucide-react";
+import { Check, Circle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -53,111 +53,92 @@ export function RegisterForm() {
   ];
 
   return (
-    <form className="min-w-0 space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="text-center">
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-teal/10 text-teal">
-          <User className="h-9 w-9" aria-hidden="true" />
-        </div>
-        <h1 className="text-3xl font-extrabold tracking-normal text-navy">Crear cuenta</h1>
-        <p className="mx-auto mt-3 max-w-md break-words text-base leading-7 text-text-muted">
-          Registra tu negocio y comienza a gestionar tus citas y equipos de trabajo de forma profesional.
+    <form className="min-w-0 space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <div>
+        <h1 className="font-heading text-lg font-semibold tracking-tight text-foreground">Crear cuenta</h1>
+        <p className="mt-1 break-words text-sm leading-6 text-muted-foreground">
+          Registra tu negocio y comienza a gestionar tus citas y equipos de trabajo.
         </p>
       </div>
 
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="businessName">Nombre del negocio</FieldLabel>
-          <div className="relative">
-            <Building2 className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-            <Input
-              id="businessName"
-              placeholder="Ej. Salón Belleza & Estilo"
-              className="h-11 pl-10"
-              aria-invalid={Boolean(errors.businessName)}
-              {...register("businessName")}
-            />
-          </div>
+          <Input
+            id="businessName"
+            placeholder="Ej. Salón Belleza & Estilo"
+            aria-invalid={Boolean(errors.businessName)}
+            {...register("businessName")}
+          />
           <FieldError errors={errors.businessName ? [errors.businessName] : undefined} />
         </Field>
 
         <Field>
           <FieldLabel htmlFor="fullName">Nombre completo</FieldLabel>
-          <div className="relative">
-            <User className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-            <Input
-              id="fullName"
-              autoComplete="name"
-              placeholder="Ingresa tu nombre completo"
-              className="h-11 pl-10"
-              aria-invalid={Boolean(errors.fullName)}
-              {...register("fullName")}
-            />
-          </div>
+          <Input
+            id="fullName"
+            autoComplete="name"
+            placeholder="Ingresa tu nombre completo"
+            aria-invalid={Boolean(errors.fullName)}
+            {...register("fullName")}
+          />
           <FieldError errors={errors.fullName ? [errors.fullName] : undefined} />
         </Field>
 
         <Field>
           <FieldLabel htmlFor="email">Correo electrónico</FieldLabel>
-          <div className="relative">
-            <Mail className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-            <Input
-              id="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              placeholder="tucorreo@ejemplo.com"
-              className="h-11 pl-10"
-              aria-invalid={Boolean(errors.email)}
-              {...register("email")}
-            />
-          </div>
+          <Input
+            id="email"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="tucorreo@ejemplo.com"
+            aria-invalid={Boolean(errors.email)}
+            {...register("email")}
+          />
           <FieldError errors={errors.email ? [errors.email] : undefined} />
         </Field>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <Field>
             <FieldLabel htmlFor="password">Contraseña</FieldLabel>
-            <div className="relative">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-              <Input
-                id="password"
-                type="password"
-                autoComplete="new-password"
-                placeholder="••••••••"
-                className="h-11 pl-10"
-                aria-invalid={Boolean(errors.password)}
-                {...register("password")}
-              />
-            </div>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="new-password"
+              placeholder="••••••••"
+              aria-invalid={Boolean(errors.password)}
+              {...register("password")}
+            />
             <FieldError errors={errors.password ? [errors.password] : undefined} />
           </Field>
           <Field>
             <FieldLabel htmlFor="confirmPassword">Confirmar contraseña</FieldLabel>
-            <div className="relative">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-              <Input
-                id="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                placeholder="••••••••"
-                className="h-11 pl-10"
-                aria-invalid={Boolean(errors.confirmPassword)}
-                {...register("confirmPassword")}
-              />
-            </div>
+            <Input
+              id="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              placeholder="••••••••"
+              aria-invalid={Boolean(errors.confirmPassword)}
+              {...register("confirmPassword")}
+            />
             <FieldError errors={errors.confirmPassword ? [errors.confirmPassword] : undefined} />
           </Field>
         </div>
 
-        <ul className="grid gap-2 rounded-lg border border-mist bg-surface-container-low px-4 py-3 text-sm sm:grid-cols-2">
+        <ul className="grid gap-2 rounded-md border border-border bg-muted/50 px-3 py-2.5 text-xs sm:grid-cols-2">
           {passwordChecks.map((check) => {
-            const Icon = check.isMet ? CheckCircle2 : Circle;
+            const Icon = check.isMet ? Check : Circle;
             return (
               <li
                 key={check.label}
-                className={check.isMet ? "flex items-center gap-2 font-semibold text-teal" : "flex items-center gap-2 text-text-muted"}
+                className={
+                  check.isMet
+                    ? "flex items-center gap-2 font-medium text-primary"
+                    : "flex items-center gap-2 text-muted-foreground"
+                }
               >
-                <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 <span>{check.label}</span>
               </li>
             );
@@ -172,11 +153,11 @@ export function RegisterForm() {
           />
           <FieldLabel htmlFor="acceptedTerms" className="font-normal">
             Acepto los{" "}
-            <Link className="font-bold text-teal hover:text-cyan-700" href="#">
+            <Link className="font-medium text-foreground underline underline-offset-4" href="#">
               Términos y Condiciones
             </Link>{" "}
             y el{" "}
-            <Link className="font-bold text-teal hover:text-cyan-700" href="#">
+            <Link className="font-medium text-foreground underline underline-offset-4" href="#">
               Aviso de Privacidad
             </Link>
             .
@@ -185,14 +166,13 @@ export function RegisterForm() {
         <FieldError errors={errors.acceptedTerms ? [errors.acceptedTerms] : undefined} />
       </FieldGroup>
 
-      <Button type="submit" className="h-12 w-full text-base font-semibold" disabled={isLoading}>
+      <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Creando cuenta..." : "Registrarse"}
-        {!isLoading && <ArrowRight className="h-5 w-5" aria-hidden="true" />}
       </Button>
 
-      <p className="text-center text-sm text-navy">
-        ¿Ya tengo cuenta?{" "}
-        <Link className="font-bold text-teal hover:text-cyan-700" href="/login">
+      <p className="text-center text-sm text-muted-foreground">
+        ¿Ya tienes cuenta?{" "}
+        <Link className="font-medium text-foreground underline underline-offset-4" href="/login">
           Iniciar sesión
         </Link>
       </p>

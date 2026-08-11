@@ -1,4 +1,5 @@
 import { AgendaView } from "@/components/agenda/AgendaView";
+import { PageHeader } from "@/components/dashboard/PageHeader";
 import { listAppointments } from "@/services/appointments.service";
 
 export const dynamic = "force-dynamic";
@@ -13,10 +14,7 @@ export default async function AgendaPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-geist text-2xl font-bold text-text-main">Agenda</h1>
-        <p className="mt-1 text-sm text-text-muted">Gestioná los turnos de tu negocio por fecha y estado.</p>
-      </div>
+      <PageHeader title="Agenda" description="Gestioná los turnos de tu negocio por fecha y estado." />
 
       <AgendaView initialAppointments={initialAppointments} initialDate={today} />
     </div>
