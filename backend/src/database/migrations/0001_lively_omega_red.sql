@@ -11,7 +11,9 @@ CREATE TABLE "businesses" (
 );
 --> statement-breakpoint
 ALTER TABLE "business_services" DROP CONSTRAINT "business_services_name_unique";--> statement-breakpoint
-ALTER TABLE "conversation_states" ALTER COLUMN "id" SET DATA TYPE serial;--> statement-breakpoint
+ALTER TABLE "conversation_states" DROP CONSTRAINT "conversation_states_pkey";--> statement-breakpoint
+ALTER TABLE "conversation_states" DROP COLUMN "id";--> statement-breakpoint
+ALTER TABLE "conversation_states" ADD COLUMN "id" serial PRIMARY KEY;--> statement-breakpoint
 ALTER TABLE "appointments" ADD COLUMN "business_id" integer NOT NULL;--> statement-breakpoint
 ALTER TABLE "business_services" ADD COLUMN "business_id" integer NOT NULL;--> statement-breakpoint
 ALTER TABLE "conversation_states" ADD COLUMN "phone" varchar(20) NOT NULL;--> statement-breakpoint
