@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BarChart3,
-  CalendarDays,
-  Scissors,
-  Settings,
-  Users,
-  LayoutDashboard,
-  type LucideIcon,
-} from "lucide-react";
+import { CalendarDays, Settings, LayoutDashboard, type LucideIcon } from "lucide-react";
 import clsx from "clsx";
 import { Logo } from "@/components/brand/Logo";
 import { ThemeToggle } from "@/components/dashboard/ThemeToggle";
@@ -25,10 +17,6 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Agenda", href: "/dashboard/agenda", icon: CalendarDays },
-  { label: "Clientes", href: "/dashboard/clientes", icon: Users },
-  { label: "Servicios", href: "/dashboard/servicios", icon: Scissors },
-  { label: "Personal", href: "/dashboard/personal", icon: Users },
-  { label: "Analíticas", href: "/dashboard/analiticas", icon: BarChart3 },
   { label: "Configuración", href: "/dashboard/configuracion", icon: Settings },
 ];
 
