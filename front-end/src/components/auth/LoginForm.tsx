@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Lock, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -38,9 +37,9 @@ export function LoginForm() {
 
   return (
     <form className="min-w-0 space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="text-center">
-        <h1 className="font-heading text-2xl font-semibold tracking-tight text-navy">Bienvenido de nuevo</h1>
-        <p className="mt-2 break-words text-base leading-7 text-text-muted">
+      <div>
+        <h1 className="font-heading text-lg font-semibold tracking-tight text-foreground">Bienvenido de nuevo</h1>
+        <p className="mt-1 break-words text-sm leading-6 text-muted-foreground">
           Ingresa tus credenciales para acceder a tu panel de control
         </p>
       </div>
@@ -48,41 +47,33 @@ export function LoginForm() {
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="email">Correo electrónico</FieldLabel>
-          <div className="relative">
-            <Mail className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-            <Input
-              id="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              placeholder="ejemplo@estiloturno.com"
-              className="h-12 pl-10"
-              aria-invalid={Boolean(errors.email)}
-              {...register("email")}
-            />
-          </div>
+          <Input
+            id="email"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="ejemplo@estiloturno.com"
+            aria-invalid={Boolean(errors.email)}
+            {...register("email")}
+          />
           <FieldError errors={errors.email ? [errors.email] : undefined} />
         </Field>
 
         <Field>
           <div className="flex items-center justify-between gap-4">
             <FieldLabel htmlFor="password">Contraseña</FieldLabel>
-            <Link className="text-sm font-semibold text-primary hover:underline" href="/forgot-password">
+            <Link className="text-xs font-medium text-muted-foreground hover:text-foreground" href="/forgot-password">
               ¿Olvidaste tu contraseña?
             </Link>
           </div>
-          <div className="relative">
-            <Lock className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="••••••••••••"
-              className="h-12 pl-10"
-              aria-invalid={Boolean(errors.password)}
-              {...register("password")}
-            />
-          </div>
+          <Input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            placeholder="••••••••••••"
+            aria-invalid={Boolean(errors.password)}
+            {...register("password")}
+          />
           <FieldError errors={errors.password ? [errors.password] : undefined} />
         </Field>
 
@@ -98,14 +89,13 @@ export function LoginForm() {
         </Field>
       </FieldGroup>
 
-      <Button type="submit" className="h-12 w-full text-base font-semibold" disabled={isLoading}>
+      <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Ingresando..." : "Iniciar sesión"}
-        {!isLoading && <ArrowRight className="h-5 w-5" aria-hidden="true" />}
       </Button>
 
-      <p className="text-center text-sm text-text-main">
+      <p className="text-center text-sm text-muted-foreground">
         ¿No tienes una cuenta?{" "}
-        <Link className="font-bold text-teal hover:text-cyan-700" href="/register">
+        <Link className="font-medium text-foreground underline underline-offset-4" href="/register">
           Empieza gratis
         </Link>
       </p>

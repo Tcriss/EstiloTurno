@@ -4,57 +4,116 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * EstiloTurno — Design tokens.
+ *
+ * Single source of truth: shadcn semantic tokens only.
+ * Never hardcode a hex in a component. If a colour is missing here, add it here.
+ */
+
 :root {
   color-scheme: light;
 
-  /* shadcn semantic tokens, mapped to the EstiloTurno brand palette */
-  --background: #f7fafc;
-  --foreground: #181c1e;
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+
   --card: #ffffff;
-  --card-foreground: #181c1e;
+  --card-foreground: #0a0a0a;
+
   --popover: #ffffff;
-  --popover-foreground: #181c1e;
-  --primary: #006a66;
+  --popover-foreground: #0a0a0a;
+
+  --primary: #0b7570;
   --primary-foreground: #ffffff;
-  --secondary: #d2e1f6;
-  --secondary-foreground: #566476;
-  --muted: #ebeef0;
-  --muted-foreground: #3d4948;
-  --accent: #e5e9eb;
-  --accent-foreground: #181c1e;
-  --destructive: #ba1a1a;
+
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+
+  --accent: #f5f5f5;
+  --accent-foreground: #171717;
+
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #006a66;
-  --chart-1: #38b2ac;
-  --chart-2: #d2e1f6;
-  --chart-3: #494bd6;
-  --chart-4: #9497ff;
-  --chart-5: #ba1a1a;
-  --radius: 0.625rem;
+
+  --success: #0b7570;
+  --success-foreground: #ffffff;
+
+  --warning: #b45309;
+  --warning-foreground: #ffffff;
+
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #0b7570;
+
+  --sidebar: #fafafa;
+  --sidebar-foreground: #0a0a0a;
+  --sidebar-accent: #f0f0f0;
+  --sidebar-accent-foreground: #0a0a0a;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #0b7570;
+
+  --chart-1: #0b7570;
+  --chart-2: #14a39c;
+  --chart-3: #737373;
+  --chart-4: #a3a3a3;
+  --chart-5: #d4d4d4;
+
+  --radius: 0.5rem;
 }
 
 .dark {
-  --background: #f7fafc;
-  --foreground: #181c1e;
-  --card: #ffffff;
-  --card-foreground: #181c1e;
-  --popover: #ffffff;
-  --popover-foreground: #181c1e;
-  --primary: #006a66;
-  --primary-foreground: #ffffff;
-  --secondary: #d2e1f6;
-  --secondary-foreground: #566476;
-  --muted: #ebeef0;
-  --muted-foreground: #3d4948;
-  --accent: #e5e9eb;
-  --accent-foreground: #181c1e;
-  --destructive: #ba1a1a;
+  color-scheme: dark;
+
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+
+  --card: #141414;
+  --card-foreground: #fafafa;
+
+  --popover: #141414;
+  --popover-foreground: #fafafa;
+
+  /* Lifted from the brand teal so it clears contrast on a near-black surface */
+  --primary: #14a39c;
+  --primary-foreground: #04201f;
+
+  --secondary: #1f1f1f;
+  --secondary-foreground: #fafafa;
+
+  --muted: #1f1f1f;
+  --muted-foreground: #a1a1a1;
+
+  --accent: #262626;
+  --accent-foreground: #fafafa;
+
+  --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #006a66;
+
+  --success: #14a39c;
+  --success-foreground: #04201f;
+
+  --warning: #f59e0b;
+  --warning-foreground: #1c1204;
+
+  --border: #262626;
+  --input: #262626;
+  --ring: #14a39c;
+
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #fafafa;
+  --sidebar-accent: #1f1f1f;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #262626;
+  --sidebar-ring: #14a39c;
+
+  --chart-1: #14a39c;
+  --chart-2: #0b7570;
+  --chart-3: #a1a1a1;
+  --chart-4: #737373;
+  --chart-5: #404040;
 }
 
 @theme inline {
@@ -74,95 +133,39 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* Material Design 3 palette (pre-existing brand system, kept for components not yet migrated to shadcn semantic tokens) */
-  --color-primary-container: #38b2ac;
-  --color-on-primary: #ffffff;
-  --color-on-primary-container: #003f3d;
-  --color-inverse-primary: #66d8d2;
-  --color-primary-fixed: #84f5ee;
-  --color-primary-fixed-dim: #66d8d2;
-  --color-on-primary-fixed: #00201e;
-  --color-on-primary-fixed-variant: #00504d;
+  /* Minimal elevation. Depth comes from borders, not shadows. */
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --shadow-overlay: 0 8px 24px -8px rgb(0 0 0 / 0.12), 0 2px 8px -2px rgb(0 0 0 / 0.06);
 
-  --color-secondary-color: #516071;
-  --color-on-secondary: #ffffff;
-  --color-secondary-container: #d2e1f6;
-  --color-on-secondary-container: #566476;
-  --color-secondary-fixed: #d5e4f9;
-  --color-secondary-fixed-dim: #b9c8dc;
-  --color-on-secondary-fixed: #0e1d2c;
-  --color-on-secondary-fixed-variant: #3a4859;
-
-  --color-tertiary: #494bd6;
-  --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #9497ff;
-  --color-on-tertiary-container: #1b14b1;
-  --color-tertiary-fixed: #e1e0ff;
-  --color-tertiary-fixed-dim: #c0c1ff;
-  --color-on-tertiary-fixed: #07006c;
-  --color-on-tertiary-fixed-variant: #2f2ebe;
-
-  --color-error-color: #ba1a1a;
-  --color-on-error: #ffffff;
-  --color-error-container: #ffdad6;
-  --color-on-error-container: #93000a;
-
-  --color-on-background: #181c1e;
-  --color-surface: #f7fafc;
-  --color-surface-dim: #d7dadc;
-  --color-surface-bright: #f7fafc;
-  --color-surface-variant: #e0e3e5;
-  --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f1f4f6;
-  --color-surface-container: #ebeef0;
-  --color-surface-container-high: #e5e9eb;
-  --color-surface-container-highest: #e0e3e5;
-  --color-on-surface: #181c1e;
-  --color-on-surface-variant: #3d4948;
-  --color-inverse-surface: #2d3133;
-  --color-inverse-on-surface: #eef1f3;
-  --color-outline: #6d7a78;
-  --color-outline-variant: #bcc9c7;
-  --color-surface-tint: #006a66;
-
-  /* Brand tokens */
-  --color-slate-dark: #0f172a;
-  --color-border-subtle: #e2e8f0;
-  --color-text-main: #2d3748;
-  --color-text-muted: #718096;
-
-  /* Legacy aliases (kept for backwards compat with existing auth components) */
-  --color-navy: #1f2d3d;
-  --color-teal: #38b2ac;
-  --color-blue-gray: #9fb7c1;
-  --color-mist: #e2e8f0;
-
-  --shadow-soft: 0 22px 70px rgba(31, 45, 61, 0.12);
-  --shadow-panel: 0 16px 46px rgba(31, 45, 61, 0.1);
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --shadow-login: 0 8px 24px rgba(0, 106, 102, 0.16);
-
-  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
-  --font-geist: var(--font-geist), Geist, Inter, sans-serif;
-  --font-heading: var(--font-geist), Geist, Inter, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist), Geist, ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-geist), Geist, ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
-
-  --spacing-gutter: 24px;
-  --spacing-sidebar-width: 260px;
-  --spacing-container-max: 1440px;
 }
 
 * {
@@ -177,6 +180,7 @@ body {
 body {
   margin: 0;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -204,31 +208,17 @@ input::-ms-clear {
   }
 }
 
-.floating-preview {
-  animation: auth-float 6s ease-in-out infinite;
-}
-
-@keyframes auth-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .floating-preview {
-    animation: none;
-  }
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading tracking-tight;
   }
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Mail, Send } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -42,42 +42,46 @@ export function ForgotPasswordForm() {
 
   return (
     <form className="min-w-0 space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="pt-2">
-        <h1 className="text-3xl font-extrabold tracking-normal text-navy">Restablecer contraseña</h1>
-        <p className="mt-3 break-words text-base leading-7 text-text-muted">
+      <div>
+        <h1 className="font-heading text-lg font-semibold tracking-tight text-foreground">Restablecer contraseña</h1>
+        <p className="mt-1 break-words text-sm leading-6 text-muted-foreground">
           Escribe el correo de tu cuenta y te enviaremos un enlace para crear una nueva contraseña.
         </p>
       </div>
 
+      {successMessage && (
+        <p className="rounded-md border border-border bg-muted/50 px-3 py-2.5 text-sm text-muted-foreground">
+          {successMessage}
+        </p>
+      )}
+
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="email">Correo electrónico</FieldLabel>
-          <div className="relative">
-            <Mail className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-            <Input
-              id="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              placeholder="nombre@ejemplo.com"
-              className="h-12 pl-10"
-              aria-invalid={Boolean(errors.email)}
-              disabled={Boolean(successMessage)}
-              {...register("email")}
-            />
-          </div>
+          <Input
+            id="email"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="nombre@ejemplo.com"
+            aria-invalid={Boolean(errors.email)}
+            disabled={Boolean(successMessage)}
+            {...register("email")}
+          />
           <FieldError errors={errors.email ? [errors.email] : undefined} />
         </Field>
       </FieldGroup>
 
-      <Button type="submit" className="h-12 w-full text-base font-semibold" disabled={isLoading || Boolean(successMessage)}>
+      <Button type="submit" className="w-full" disabled={isLoading || Boolean(successMessage)}>
         {isLoading ? "Enviando enlace..." : "Enviar enlace"}
-        {!isLoading && <Send className="h-5 w-5" aria-hidden="true" />}
       </Button>
 
-      <p className="text-center text-sm text-navy">
-        <Link className="inline-flex items-center gap-2 font-bold text-teal hover:text-cyan-700" href="/login">
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+      <p className="text-center text-sm">
+        <Link
+          className="inline-flex items-center gap-1.5 font-medium text-muted-foreground hover:text-foreground"
+          href="/login"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
           Volver a iniciar sesión
         </Link>
       </p>
