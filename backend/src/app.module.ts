@@ -6,6 +6,7 @@ import { AuthModule } from "./auth/auth.module";
 import { WhatsappModule } from "./whatsapp/whatsapp.module";
 import { DatabaseModule } from "./database/database.module";
 import { ScheduleModule } from "./schedule/schedule.module";
+import { HealthController } from "./health/health.controller";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ScheduleModule } from "./schedule/schedule.module";
     ScheduleModule,
     WhatsappModule,
   ],
+  controllers: [HealthController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}
