@@ -42,17 +42,23 @@ export function DashboardFeatures() {
             icon={Scissors}
             title="Servicios y precios"
             description="Carga tu catálogo con duración y precio — el bot lo usa para calcular disponibilidad real."
-          />
+          >
+            <MiniServicesList />
+          </FeatureCard>
           <FeatureCard
             icon={Users}
             title="Roles del equipo"
             description="Administrador con control total; cada empleado ve solo su propia agenda del día."
-          />
+          >
+            <MiniTeamAvatars />
+          </FeatureCard>
           <FeatureCard
             icon={BarChart3}
             title="Reportes del negocio"
             description="Citas completadas, ausencias y servicios más pedidos, sin hojas de cálculo."
-          />
+          >
+            <MiniReportBars />
+          </FeatureCard>
         </div>
       </div>
     </section>
@@ -63,18 +69,83 @@ function FeatureCard({
   icon: Icon,
   title,
   description,
+  children,
 }: {
   icon: typeof Scissors;
   title: string;
   description: string;
+  children?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-6 shadow-card">
+    <div className="flex flex-col rounded-xl border border-border bg-card p-6 shadow-card">
       <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
         <Icon className="h-4 w-4" />
       </span>
       <h3 className="mt-4 font-heading text-base font-semibold text-foreground">{title}</h3>
       <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{description}</p>
+      {children && <div className="mt-5">{children}</div>}
+    </div>
+  );
+}
+
+const MINI_SERVICES = [
+  { name: "Corte de cabello", price: "RD$500", duration: "45 min" },
+  { name: "Cerquillo", price: "RD$300", duration: "20 min" },
+];
+
+function MiniServicesList() {
+  return (
+    <div className="space-y-1.5" aria-hidden="true">
+      {MINI_SERVICES.map((service) => (
+        <div
+          key={service.name}
+          className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/40 px-3 py-2"
+        >
+          <span className="truncate text-xs font-medium text-foreground">{service.name}</span>
+          <span className="flex shrink-0 items-center gap-1.5 text-[11px] text-muted-foreground">
+            <span className="font-medium text-primary">{service.price}</span>
+            {service.duration}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MiniTeamAvatars() {
+  const members = [
+    { initials: "CT", role: "Admin" },
+    { initials: "JR", role: "Empleado" },
+  ];
+
+  return (
+    <div className="flex flex-col gap-1.5" aria-hidden="true">
+      {members.map((member) => (
+        <div key={member.initials} className="flex items-center gap-2.5">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary">
+            {member.initials}
+          </span>
+          <span className="text-xs text-muted-foreground">{member.role}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MiniReportBars() {
+  const bars = [40, 65, 30, 90, 55];
+
+  return (
+    <div className="flex h-16 items-end gap-1.5" aria-hidden="true">
+      {bars.map((height, index) => (
+        <span
+          key={index}
+          className={
+            "flex-1 rounded-t-[3px] " + (index === 3 ? "bg-primary" : "bg-muted")
+          }
+          style={{ height: `${height}%` }}
+        />
+      ))}
     </div>
   );
 }
