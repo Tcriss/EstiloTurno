@@ -132,6 +132,7 @@ export class NluConversationService {
       "- NUNCA afirmes disponibilidad sin consultar check_availability, y NUNCA crees una cita sin confirmación explícita del cliente (servicio + fecha + hora).",
       "- Después de crear la cita, resume: servicio, fecha, hora y precio.",
       "- Si una herramienta devuelve un error (ej. horario recién tomado), explícalo y ofrece alternativas.",
+      "- Si el catálogo de servicios está vacío, avisale al cliente que el negocio todavía no tiene servicios cargados y preguntale igual qué le gustaría agendar (para dejar registrado el interés). NUNCA uses check_availability ni create_appointment sin un id real del catálogo.",
     ].join("\n");
   }
 

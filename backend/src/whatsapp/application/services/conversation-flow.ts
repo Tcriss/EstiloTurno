@@ -57,6 +57,15 @@ export async function handleChatState(
   switch (state) {
     case ChatState.START: {
       const services = await scheduleUseCases.getServices.execute(businessId);
+
+      if (services.length === 0) {
+        return {
+          nextState: ChatState.START,
+          responseMessage: `¡Hola ${clientName}! Todavía no tenemos servicios cargados en el sistema. Contame igual qué te gustaría agendar y en cuanto lo habilitemos te avisamos 🙌`,
+          updatedMetadata: { clientName },
+        };
+      }
+
       let responseMessage = `¡Hola ${clientName}! Te damos la bienvenida 💇‍♀️✨\n\nPor favor, selecciona el servicio que deseas agendar ingresando el número correspondiente:\n\n`;
 
       services.forEach((service, index) => {
