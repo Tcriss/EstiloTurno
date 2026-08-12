@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as schema from "./schema";
 
-const DEMO_BUSINESS_NAME = "Salón Demo EstiloTurno";
+const DEMO_BUSINESS_NAME = "Indexing";
 
 async function main() {
   const connectionString = process.env.DATABASE_URL;
