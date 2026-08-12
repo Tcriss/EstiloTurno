@@ -15,7 +15,8 @@ import { handleChatState } from "../services/conversation-flow";
 import { NluConversationService } from "../services/nlu-conversation.service";
 
 // Enmascara el teléfono en logs, ej: 18095551234 -> ***1234. Nunca logueamos el texto del mensaje.
-function maskPhone(phone: string): string {
+function maskPhone(phone: string | undefined | null): string {
+  if (!phone) return "desconocido";
   return phone.length <= 4 ? "***" : `***${phone.slice(-4)}`;
 }
 

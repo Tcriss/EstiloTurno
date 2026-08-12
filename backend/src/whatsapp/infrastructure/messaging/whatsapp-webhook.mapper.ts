@@ -16,7 +16,7 @@ export function parseWhatsAppWebhook(body: any): IncomingMessageInfo | null {
     const message = change?.messages?.[0];
     const contact = change?.contacts?.[0];
 
-    if (!message || !contact) {
+    if (!message || !contact?.wa_id) {
       return null;
     }
 
